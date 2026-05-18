@@ -48,13 +48,6 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-		<!-- H2 DATABASE -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
 
 		<!-- LOMBOK (configuração CORRETA) -->
 		<dependency>
