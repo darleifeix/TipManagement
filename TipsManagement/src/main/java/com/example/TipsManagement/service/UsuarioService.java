@@ -3,8 +3,8 @@ package com.example.TipsManagement.service;
 import com.example.TipsManagement.Exception.BadRequestException;
 import com.example.TipsManagement.Exception.BusinessException;
 import com.example.TipsManagement.Exception.NotFoundException;
-import com.example.TipsManagement.model.LoggedUser;
 import com.example.TipsManagement.model.dto.Request.ChangePasswordRequest;
+import com.example.TipsManagement.model.dto.Request.EditUsuarioRequest;
 import com.example.TipsManagement.model.dto.Request.UsuarioRequest;
 import com.example.TipsManagement.model.dto.Response.UsuarioResponse;
 import com.example.TipsManagement.model.Usuario;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -52,21 +51,21 @@ public class UsuarioService {
                 .toList();
     }
 
-    public UsuarioResponse edit(Long id, UsuarioRequest usuarioRequest){
-        if(usuarioRequest.getName().length()<3){
+    //valida o usuario e realiza alteração de nome e email
+    public UsuarioResponse editUsuario(Long userId, EditUsuarioRequest editUsuarioRequest){
+        if(editUsuarioRequest.getName().length()<3){
             throw new BadRequestException("Número de caracteres insuficiente (min. 3)");
         }
-        Usuario usuario  = new Usuario();
-        usuario.setId(id);
-        usuario.setName(usuarioRequest.getName());
-        usuario.setEmail(usuarioRequest.getEmail());
+        Usuario usuario = usuarioRepository.findById(userId).orElseThrow(()-> new NotFoundException("Usuario não encontrado."));
+        usuario.setName(editUsuarioRequest.getName());
+        usuario.setEmail(editUsuarioRequest.getEmail());
         return mapper.convertValue(usuarioRepository.save(usuario), UsuarioResponse.class);
     }
 
 
     //Recebe um usuario, senha atual e nova, valida senha atual recebida com a atual salva em banco e realiza a alteração
-    public void changePassword(LoggedUser loggedUser, ChangePasswordRequest changePasswordRequest){
-        Usuario usuario = usuarioRepository.findById(loggedUser.getId()).orElseThrow(()-> new NotFoundException("Usuario não encontrado."));
+    public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest){
+        Usuario usuario = usuarioRepository.findById(userId).orElseThrow(()-> new NotFoundException("Usuario não encontrado."));
 
 
         boolean correctPassword = passwordEncoder.matches(
