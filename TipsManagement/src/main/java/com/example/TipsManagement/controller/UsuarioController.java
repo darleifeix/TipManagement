@@ -2,9 +2,11 @@ package com.example.TipsManagement.controller;
 
 import com.example.TipsManagement.model.LoggedUser;
 import com.example.TipsManagement.model.dto.Request.ChangePasswordRequest;
+import com.example.TipsManagement.model.dto.Request.EditUsuarioRequest;
 import com.example.TipsManagement.model.dto.Request.UsuarioRequest;
 import com.example.TipsManagement.model.dto.Response.UsuarioResponse;
 import com.example.TipsManagement.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +23,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponse> saveUsuario(@RequestBody UsuarioRequest usuarioRequest){
+    public ResponseEntity<UsuarioResponse> saveUsuario(@Valid @RequestBody UsuarioRequest usuarioRequest){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(usuarioService.save(usuarioRequest));
     }
@@ -32,14 +34,14 @@ public class UsuarioController {
                 .body(usuarioService.listAll());
     }
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> editUsuario(@PathVariable Long id,@RequestBody UsuarioRequest usuarioRequest){
+    public ResponseEntity<UsuarioResponse> editUsuario(@AuthenticationPrincipal LoggedUser loggedUser,@Valid @RequestBody EditUsuarioRequest editUsuarioRequest){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(usuarioService.edit(id, usuarioRequest));
+                .body(usuarioService.editUsuario(loggedUser.getId() ,editUsuarioRequest));
     }
 
     @PatchMapping("/password")
     public ResponseEntity<String> editUserPassword(@AuthenticationPrincipal LoggedUser loggedUser, @RequestBody ChangePasswordRequest changePasswordRequest){
-        usuarioService.changePassword(loggedUser, changePasswordRequest);
+        usuarioService.changePassword(loggedUser.getId(), changePasswordRequest);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Senha alterada com sucesso.");
     }
