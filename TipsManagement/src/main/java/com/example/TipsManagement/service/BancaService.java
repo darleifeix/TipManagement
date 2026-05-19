@@ -44,8 +44,8 @@ public class BancaService {
         if(list.isEmpty()){
             throw new NotFoundException("Não existe Banca cadastrada.");
         }
-        //Retorna a lista convertida para BancaResponse, evitando passar dados sensíveis do usuario cadastrado (senha)
 
+        //Retorna a lista convertida para BancaResponse, evitando passar dados sensíveis do usuario cadastrado (senha)
         return list.stream()
                 .map(bancaMapper::toResponse)
                 .toList();
