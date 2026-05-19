@@ -42,4 +42,10 @@ public class BetController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(betService.listAll(usuario.getId()));
     }
+
+    @GetMapping("/pending")
+    public ResponseEntity<Object> listAllPendingBet(@AuthenticationPrincipal LoggedUser usuario){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(betService.listAllPending(usuario.getId()));
+    }
 }
