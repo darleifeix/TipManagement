@@ -216,6 +216,16 @@ public class BetService {
                 .toList();
     }
 
+    public List<BetResponse> listAllPending(Long userId){
+        List<Bet> bets = betRepository.findAllByUsuarioIdAndStatus(userId, Status.PENDING);
+        if(bets.size()<1){
+            throw new NotFoundException("Não existem apostas Pendentes");
+        }
+        return bets.stream()
+                .map(bet -> betMapper.toResponse(bet))
+                .toList();
+    }
+
     private Bet getOwnedBet(Long userId, Long betId){
         return betRepository.findByIdAndUsuarioId(betId, userId)
                 .orElseThrow(()-> new NotFoundException("Não existe bet cadastrada com esse Id."));
