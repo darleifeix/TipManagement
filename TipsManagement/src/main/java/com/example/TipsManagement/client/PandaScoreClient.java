@@ -23,14 +23,33 @@ public class PandaScoreClient {
 
         System.out.println("TOKEN: " + token);
     }
-
-    public List<MatchDTO> getMatches() {
+    //metodo reutilizavel de requisição da API que recebe a rota a ser utilizada
+    private List<MatchDTO> getMatches(String uri) {
 
         return webClient.get()
-                .uri("/matches?token=" + token)
+                .uri(uri)
+                .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToFlux(MatchDTO.class)
                 .collectList()
                 .block();
     }
+
+    //metodos que realizam as requisições separados por tipo de jogo
+    public List<MatchDTO> getCsMatches() {
+        return getMatches("/csgo/matches?page=1&per_page=100");
+    }
+
+    public List<MatchDTO> getLolMatches() {
+        return getMatches("/lol/matches?page=1&per_page=100");
+    }
+
+    public List<MatchDTO> getValorantMatches() {
+        return getMatches("/valorant/matches?page=1&per_page=100");
+    }
+
+    public List<MatchDTO> getDotaMatches() {
+        return getMatches("/dota2/matches?page=1&per_page=100");
+    }
+
 }
