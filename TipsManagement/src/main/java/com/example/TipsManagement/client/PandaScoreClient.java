@@ -21,7 +21,6 @@ public class PandaScoreClient {
         this.webClient = webClient;
         this.token = token;
 
-        System.out.println("TOKEN: " + token);
     }
     //metodo reutilizavel de requisição da API que recebe a rota a ser utilizada
     private List<MatchDTO> getMatches(String uri) {
